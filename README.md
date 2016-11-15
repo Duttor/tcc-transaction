@@ -1,4 +1,4 @@
-# tcc-transaction
+## tcc-transaction
 Distribute Transaction Framework 分布式事务框架tcc
 
 提供基于两阶段提交（Try/Confirm/Cancel）的Java分布式事务实现方案
