@@ -25,19 +25,19 @@
 	</bean>
 
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-		<property name="url" value="${postgres.db.url}" />
-		<property name="username" value="${postgres.db.username}" />
-		<property name="password" value="${postgres.db.password}" />
-		<property name="maxActive" value="${postgres.db.maxActive}" />
-		<property name="initialSize" value="${postgres.db.initialSize}" />
-		<property name="maxWait" value="${postgres.db.maxWait}" />
-		<property name="minIdle" value="${postgres.db.minIdle}" />
-		<property name="timeBetweenEvictionRunsMillis" value="${postgres.db.timeBetweenEvictionRunsMillis}" />
+		<property name="url" value="${mysql.db.url}" />
+		<property name="username" value="${mysql.db.username}" />
+		<property name="password" value="${mysql.db.password}" />
+		<property name="maxActive" value="${mysql.db.maxActive}" />
+		<property name="initialSize" value="${mysql.db.initialSize}" />
+		<property name="maxWait" value="${mysql.db.maxWait}" />
+		<property name="minIdle" value="${mysql.db.minIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${mysql.db.timeBetweenEvictionRunsMillis}" />
 		<property name="minEvictableIdleTimeMillis" value="300000" />
-		<property name="validationQuery" value="${postgres.db.validationQuery}" />
-		<property name="testWhileIdle" value="${postgres.db.testWhileIdle}" />
-		<property name="testOnBorrow" value="${postgres.db.testOnBorrow}" />
-		<property name="testOnReturn" value="${postgres.db.testOnReturn}" />
+		<property name="validationQuery" value="${mysql.db.validationQuery}" />
+		<property name="testWhileIdle" value="${mysql.db.testWhileIdle}" />
+		<property name="testOnBorrow" value="${mysql.db.testOnBorrow}" />
+		<property name="testOnReturn" value="${mysql.db.testOnReturn}" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxPoolPreparedStatementPerConnectionSize" value="50" />
 	</bean>

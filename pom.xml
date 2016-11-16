@@ -30,7 +30,6 @@
 		<mvel2.version>2.0.16</mvel2.version>
 		<curator.version>2.10.0</curator.version>
 		<dbutils.version>1.5</dbutils.version>
-		<postgresql.version>9.4.1207.jre7</postgresql.version>
 		<mysql.version>5.1.26</mysql.version>
 		<mybatis.version>3.2.8</mybatis.version>
 		<mybatis-spring.version>1.2.2</mybatis-spring.version>
@@ -187,11 +186,6 @@
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
 				<version>${mysql.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>${postgresql.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mybatis</groupId>

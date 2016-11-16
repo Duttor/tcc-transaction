@@ -14,9 +14,9 @@
     <!-- 配置数据源 -->
     <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
           destroy-method="close">
-        <property name="url" value="${postgres.db.url}" />
-        <property name="username" value="${postgres.db.username}" />
-        <property name="password" value="${postgres.db.password}" />
+        <property name="url" value="${mysql.db.url}" />
+        <property name="username" value="${mysql.db.username}" />
+        <property name="password" value="${mysql.db.password}" />
         <property name="initialSize" value="1"/>
         <property name="maxActive" value="80"/>
         <property name="minIdle" value="10"/>
