@@ -1,7 +1,7 @@
 ## tcc-transaction
 Distribute Transaction Framework 分布式事务框架tcc
 
-基于tcc的Java分布式事务实现方案
+基于tcc的Java分布式事务实现方案（参考galaxy）
 
 ## 支持范围
 * JDK6+
