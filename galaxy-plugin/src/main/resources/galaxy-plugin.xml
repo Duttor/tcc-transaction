@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.dangdang.com/schema/ddframe/reg http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job http://www.dangdang.com/schema/ddframe/job/job.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       default-autowire="byName" default-lazy-init="false">
+
+    <!--<bean id="galaxy.plugin.propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="2" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <property name="locations">
+            <list>
+                <value>classpath:galaxy-plugin.properties</value>
+            </list>
+        </property>
+    </bean>-->
+    <context:property-placeholder location="classpath:galaxy-plugin.properties" order="2" ignore-unresolvable="true"/>
+
+    <!--<bean id="regCenter" class="com.dangdang.ddframe.reg.zookeeper.ZookeeperRegistryCenter" init-method="init">
+        <constructor-arg>
+            <bean class="com.dangdang.ddframe.reg.zookeeper.ZookeeperConfiguration">
+                <property name="serverLists" value="${zk.serverLists}" />
+                <property name="namespace" value="${zk.namespace}" />
+                <property name="baseSleepTimeMilliseconds" value="${zk.baseSleepTimeMilliseconds}" />
+                <property name="maxSleepTimeMilliseconds" value="${zk.maxSleepTimeMilliseconds}" />
+                <property name="maxRetries" value="${zk.maxRetries}" />
+            </bean>
+        </constructor-arg>
+    </bean>-->
+
+
+    <reg:zookeeper id="regCenter"
+                   serverLists="${zk.serverLists}"
+                   namespace="${zk.namespace}"
+                   baseSleepTimeMilliseconds="${zk.baseSleepTimeMilliseconds}"
+                   maxSleepTimeMilliseconds="${zk.maxSleepTimeMilliseconds}"
+                   maxRetries="${zk.maxRetries}" />
+
+    <!-- 因Job名需动态配置，使用Bean来配置-->
+    <bean id="transactionRecoveryJobConfig" class="com.dangdang.ddframe.job.api.JobConfiguration">
+        <constructor-arg name="jobName" value="${sar.name}-TxRecoveryJob" />
+        <constructor-arg name="jobClass" value="io.anyway.galaxy.scheduler.TransactionRecoveryJob" />
+        <constructor-arg name="shardingTotalCount" value="${transactionRecoveryJob.shardingTotalCount}" />
+        <constructor-arg name="cron" value="${transactionRecoveryJob.cron}" />
+        <property name="description" value="${transactionRecoveryJob.description}" />
+    </bean>
+
+    <bean id="transactionRecoveryJob" class="io.anyway.galaxy.scheduler.TransactionRecoveryJob">
+        <property name="springContextUtil" ref="springContextUtil" />
+    </bean>
+
+    <bean id="txSpringJobScheduler" class="com.dangdang.ddframe.job.spring.schedule.SpringJobScheduler" init-method="init">
+        <constructor-arg ref="regCenter" />
+        <constructor-arg ref="transactionRecoveryJobConfig" />
+    </bean>
+
+    <!--<job:bean id="${sar.name}-TxRecoveryJob" class="io.anyway.galaxy.scheduler.TransactionRecoveryJob"
+              regCenter="regCenter"
+              shardingTotalCount="${transactionRecoveryJob.shardingTotalCount}"
+              cron="${transactionRecoveryJob.cron}"
+              description="${transactionRecoveryJob.description}" />-->
+
+</beans>

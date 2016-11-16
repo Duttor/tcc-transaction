@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+				http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+				http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+				http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+				">
+
+	<import resource="galaxy-transaction.xml"/>
+	<!-- 全局参数定义 -->
+	<bean id="GlobalPropertyConfigurer" 
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="url" value="${postgres.db.url}" />
+		<property name="username" value="${postgres.db.username}" />
+		<property name="password" value="${postgres.db.password}" />
+		<property name="maxActive" value="${postgres.db.maxActive}" />
+		<property name="initialSize" value="${postgres.db.initialSize}" />
+		<property name="maxWait" value="${postgres.db.maxWait}" />
+		<property name="minIdle" value="${postgres.db.minIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${postgres.db.timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="${postgres.db.validationQuery}" />
+		<property name="testWhileIdle" value="${postgres.db.testWhileIdle}" />
+		<property name="testOnBorrow" value="${postgres.db.testOnBorrow}" />
+		<property name="testOnReturn" value="${postgres.db.testOnReturn}" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="50" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<bean class="io.anyway.galaxy.spring.DataSourceAdaptor">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- Mock bean -->
+	<bean id="messageProducer" class="common.MockMessageProducer" />
+
+</beans>

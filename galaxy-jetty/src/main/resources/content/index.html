@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css">
+            #top{
+                margin:0px 0px 20px;
+                padding: 5px 5px;
+                border-bottom: 2px solid #bbb;
+            }
+            #top a{
+                font-size:16px;
+                font-weight: bold;
+                padding: 2px 5px;
+                text-decoration: none;
+            }
+            #content{
+                padding:0 0 0 10px;
+                font-size: 12px;
+            }
+            #content div.key{
+                color: #196eaa;
+                float: left;
+                font-weight: bold;
+            }
+            #content div.value{
+                color: #444;
+                margin:0 0 10px 200px;
+            }
+            
+            #content div.btn{
+            	text-align :center
+            }
+            .active{
+                background-color: #12a1cc;
+                color: #fff;
+            }
+            
+			.btn5 {
+			    width: 145px;
+			    height: 34px;
+			    line-height: 22px;
+			    font-size: 22px;
+			    color: #959595;
+			    padding-bottom: 4px;
+			}
+			
+			a {   
+			color: #c75f3e;   
+			}   
+			  
+			#mytable {   
+			width: 100%;   
+			padding: 0;   
+			margin: 0;   
+			}   
+			  
+			th {   
+			font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;   
+			color: #4f6b72;   
+			border-right: 1px solid #C1DAD7;   
+			border-bottom: 1px solid #C1DAD7;   
+			border-top: 1px solid #C1DAD7;   
+			letter-spacing: 2px;   
+			text-transform: uppercase;   
+			text-align: left;   
+			padding: 6px 6px 6px 12px;   
+			background: #CAE8EA  no-repeat;   
+			}   
+			  
+			th.nobg {   
+			border-top: 0;   
+			border-left: 0;   
+			border-right: 1px solid #C1DAD7;   
+			background: none;   
+			}   
+			  
+			td {   
+			border-right: 1px solid #C1DAD7;   
+			border-bottom: 1px solid #C1DAD7;   
+			background: #fff;   
+			font-size:11px;   
+			padding: 6px 6px 6px 12px;   
+			color: #4f6b72;   
+			}   
+			  
+			  
+			td.alt {   
+			background: #F5FAFA;   
+			color: #797268;   
+			}   
+			  
+			th.spec {   
+			border-left: 1px solid #C1DAD7;   
+			border-top: 0;   
+			background: #fff no-repeat;   
+			font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;   
+			}   
+			  
+			th.specalt {   
+			border-left: 1px solid #C1DAD7;   
+			border-top: 0;   
+			background: #f5fafa no-repeat;   
+			font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;   
+			color: #797268;   
+			}   
+						
+        </style>
+        <script src="/jquery-2.1.1.min.js"></script>
+        <script>
+        	var interval = 0;
+            function loadTask(){
+                $.get('/api/tasks?interval='+interval,{dataType:'json'},function(res){
+                    var c = $('#content');
+                    c.empty();
+                    c.append($('<div class="btn">'+'<input type="button" value="prev" class="btn5" onclick="prev()">&nbsp;'+'&nbsp;<input type="button" value="next" class="btn5" onclick="next()">'+'</div>'));
+            		var table = $('<table id="mytable" cellspacing="0">');
+            		table.append($('<tr><th>事务ID</th><th>状态</th><th>事务类型</th><th>重试次数</th><th>创建时间</th><th>修改时间</th><th>操作</th></tr>'));
+                    for(var i=0;i<res.length;i++){                         
+                    	table.append($('<tr><td>'+res[i].txId+'</td><td>'+res[i].strTXStatus+'</td><td>'+res[i].strTXType+'</td><td>'+res[i].retriedCount+'</td><td>'+res[i].strGmtCreated+'</td><td>'+res[i].strGmtModified+'</td><td><a href=# onclick="restart('+res[i].txId+')">重启</a></td></tr>'))
+                    }
+                    c.append(table)
+                    
+                });
+            }
+            
+            function prev(){
+            	interval++;
+            	loadTask();
+            }
+            
+            function next(){
+            	if(interval>0){
+            		interval--;
+            	}
+            	loadTask();
+            }
+            
+            function restart(txid){
+            	$.get('/api/start?txid='+txid,{dataType:'json'},function(res){
+            		console.log(res);
+            	});
+            	loadTask();
+            }
+
+            function loadEnv(){
+                $.get('/api/env',{dataType:'json'},function(res){
+                    var c = $('#content');
+                    c.empty();
+                    for(prop in res){
+                        c.append($('<div class="key">'+prop+':</div><div class="value">'+res[prop]+'</div>'));
+                    }
+                });
+            }
+
+            function loadProps(){
+                $.get('/api/props',{dataType:'json'},function(res){
+                    var c = $('#content');
+                    c.empty();
+                    for(prop in res){
+                        c.append($('<div class="key">'+prop+':</div><div class="value">'+res[prop]+'</div>'));
+                    }
+                });
+            }
+
+            $(function(){
+                $('#task').click(function(){
+                    $('#task').addClass("active");
+                    $('#env').removeClass("active");
+                    $('#config').removeClass("active");
+                    loadTask();
+                });
+                $('#env').click(function(){
+                    $('#task').removeClass("active");
+                    $('#env').addClass("active");
+                    $('#config').removeClass("active");
+                    loadEnv();
+                });
+                $('#config').click(function(){
+                    $('#task').removeClass("active");
+                    $('#env').removeClass("active");
+                    $('#config').addClass("active");
+                    loadProps();
+                });
+                loadTask();
+            })
+        </script>
+    </head>
+    <body>
+    <div id="top">
+        <a id="task" class="active" href="#">tasks</a>
+        <a id="env" href="#">Environment</a>
+        <a id="config" href="#">Configuration</a>
+    </div>
+    <div id="content">
+    </div>
+    </body>
+</html>

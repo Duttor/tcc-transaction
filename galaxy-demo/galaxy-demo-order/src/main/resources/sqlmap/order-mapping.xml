@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.anyway.galaxy.demo.dao.OrderDao" >
+
+  <insert id="addOrder" parameterType="io.anyway.galaxy.demo.domain.OrderDO" >
+    insert into t_order (order_id, product_id, user_id, status, amount)
+    values (#{orderId}, #{productId}, #{userId}, #{status}, #{amount})
+  </insert>
+
+
+  <delete id="deleteOrder" parameterType="io.anyway.galaxy.demo.domain.OrderDO" >
+    delete from t_order
+    where order_id = #{orderId}
+  </delete>
+
+
+</mapper>

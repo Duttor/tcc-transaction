@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.anyway.galaxy.console.dal.dao.DataSourceInfoDao" >
+
+
+  <resultMap type="io.anyway.galaxy.console.dal.dto.DataSourceInfoDto" id="dataSourceInfoDto">
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="driver_class" property="driverClass" />
+    <result column="jndi" property="jndi" />
+    <result column="db_url" property="dbUrl" />
+    <result column="max_active" property="maxActive" />
+    <result column="initial_size" property="initialSize" />
+    <result column="username" property="username" />
+    <result column="password" property="password" />
+    <result column="status" property="status" />
+    <result column="active_flag" property="activeFlag" />
+    <result column="active_flag" property="activeFlag" />
+    <result column="memo" property="memo" />
+    <result column="gmt_created" property="gmtCreated" />
+    <result column="gmt_modified" property="gmtModified" />
+  </resultMap>
+
+
+  <insert id="add" parameterType="io.anyway.galaxy.console.dal.dto.DataSourceInfoDto" >
+    insert into datasource_info (name, driver_class, jndi, db_url, max_active, initial_size, username, password, url, status, memo, gmt_created)
+    values (#{name}, #{driverClass}, #{jndi}, #{db_url}, #{maxActive}, #{initialSize}, #{username}, #{password}, #{url}, #{status}, #{memo}, current_timestamp(0)::timestamp without time zone)
+  </insert>
+
+  <update id="update" parameterType="io.anyway.galaxy.console.dal.dto.DataSourceInfoDto" >
+    insert into datasource_info name = #{name}, driver_class = #{driverClass}, jndi = #{jndi}
+        , db_url = #{db_url}, max_active = #{maxActive}, initial_size = #{initialSize}
+        , username = #{username}, password = #{password}, url = #{url}, status = #{status}
+        , memo = #{memo}, gmt_created = current_timestamp(0)::timestamp without time zone
+    where id = #{id}
+  </update>
+
+  <select id="list" parameterType="io.anyway.galaxy.console.dal.dto.DataSourceInfoDto" resultMap="dataSourceInfoDto">
+    select id, name, driver_class, jndi, db_url, max_active, initial_size, username, password, url, status, active_flag, memo, gmt_created, gmt_modified
+    from datasource_info
+    <where>
+      <if test="ids != null">
+          id in
+          <foreach item="item" index="index" collection="ids"
+                   open="(" separator="," close=")">
+            #{item}
+          </foreach>
+      </if>
+    </where>
+  </select>
+
+  <select id="get" parameterType="long" resultMap="dataSourceInfoDto">
+    select id, name, driver_class, jndi, db_url, max_active, initial_size, username, password, url, status, active_flag, memo, gmt_created, gmt_modified
+    from datasource_info di
+    where id = #{id}
+  </select>
+
+  <delete id="del" parameterType="io.anyway.galaxy.console.dal.dto.DataSourceInfoDto" >
+    update datasource_info
+    set active_flag = 0, gmt_modified = current_timestamp(0)::timestamp without time zone
+    where id = #{id}
+  </delete>
+
+</mapper>

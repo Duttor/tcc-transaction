@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.anyway.galaxy.console.dal.dao.BusinessTypeDao" >
+
+  <resultMap type="io.anyway.galaxy.console.dal.dto.BusinessTypeDto" id="businessTypeDto">
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="ds_id" property="dsId" />
+    <result column="active_flag" property="activeFlag" />
+    <result column="memo" property="memo" />
+    <result column="gmt_created" property="gmtCreated" />
+    <result column="gmt_modified" property="gmtModified" />
+  </resultMap>
+
+
+  <insert id="add" parameterType="io.anyway.galaxy.console.dal.dto.BusinessTypeDto" >
+    insert into business_type (name, ds_id, memo, gmt_created)
+    values (#{name}, #{dsId}, #{memo}, current_timestamp(0)::timestamp without time zone)
+  </insert>
+
+  <update id="update" parameterType="io.anyway.galaxy.console.dal.dto.BusinessTypeDto" >
+    update business_type set name = #{name}, ds_id = #{dsId}, memo = #{memo}
+           , gmt_modified = current_timestamp(0)::timestamp without time zone
+    where id = #{id}
+  </update>
+
+  <select id="list" parameterType="io.anyway.galaxy.console.dal.dto.BusinessTypeDto" resultMap="businessTypeDto">
+    select id, name, ds_id, active_flag, memo, gmt_created, gmt_modified
+    from business_type
+  </select>
+
+  <select id="get" parameterType="long" resultMap="businessTypeDto">
+    select bt.id, bt.name, bt.ds_id
+    from business_type bt
+    where bt.id = #{id} and bt.active_flag = 1
+  </select>
+
+  <select id="getByName" parameterType="String" resultMap="businessTypeDto">
+    select bt.id, bt.name, bt.ds_id
+    from business_type bt
+    where bt.name = #{name} and bt.active_flag = 1
+  </select>
+
+  <delete id="del" parameterType="long" >
+    update datasource_info
+    set active_flag = 0, gmt_modified = current_timestamp(0)::timestamp without time zone
+    where id = #{id}
+  </delete>
+
+</mapper>

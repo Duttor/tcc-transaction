@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.anyway.galaxy.demo.dao.RepositoryDao" >
+
+  <insert id="add" parameterType="io.anyway.galaxy.demo.domain.RepositoryDO" >
+    insert into t_repository (id, category, amount, price)
+    values (#{productId}, #{category}, #{amount}, #{price})
+  </insert>
+
+  <update id="decrease" parameterType="io.anyway.galaxy.demo.domain.RepositoryDO" >
+    update t_repository
+    set amount = amount - #{amount}
+    where id = #{productId}
+  </update>
+
+  <update id="increase" parameterType="io.anyway.galaxy.demo.domain.RepositoryDO" >
+    update t_repository
+    set amount = amount + #{amount}
+    where id = #{productId}
+  </update>
+
+</mapper>

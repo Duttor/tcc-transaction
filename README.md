@@ -36,7 +36,10 @@ Cancel: 取消执行业务
     释放Try阶段预留的业务资源
 
     Cancel操作满足幂等性
-    
+
+## 架构图
+![Galaxy Architecture](galaxy-doc/images/architecture.png)    
+
 ## Demo
 * galaxy-demo-purchase：商城系统
 * galaxy-demo-repository：库存系统

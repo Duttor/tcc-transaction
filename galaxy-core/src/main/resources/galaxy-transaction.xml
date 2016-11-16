@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd "
+       default-autowire="byName" default-lazy-init="false">
+
+    <context:component-scan base-package="io.anyway.galaxy"/>
+
+    <bean id="galaxy.propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="2" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <property name="locations">
+            <list>
+                <value>classpath:galaxy-core.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="txMsgTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${txMsgTaskExecutor.corePoolSize}" />
+        <property name="maxPoolSize" value="${txMsgTaskExecutor.maxPoolSize}" />
+        <property name="queueCapacity" value="${txMsgTaskExecutor.queueCapacity}" />
+        <property name="rejectedExecutionHandler">
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+        </property>
+    </bean>
+
+    <!-- 以下的配置需要在各模块中配置一遍 -->
+    <!-- 扫描模块内容的Action和Service -->
+    <aop:aspectj-autoproxy/>
+    <bean id="springContextUtil" class="io.anyway.galaxy.spring.SpringContextUtil" scope="singleton" >
+        <!-- 指定模块的唯一标识 -->
+        <property name="moduleId" value="${sar.name}"></property>
+    </bean>
+
+
+</beans>

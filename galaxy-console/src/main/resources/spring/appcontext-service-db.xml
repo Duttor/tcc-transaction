@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+	     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-autowire="byName">
+
+    <description>数据源配置</description>
+
+    <util:properties id="jdbc" location="classpath:config.properties"/>
+
+    <!-- 配置数据源 -->
+    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <property name="url" value="${postgres.db.url}" />
+        <property name="username" value="${postgres.db.username}" />
+        <property name="password" value="${postgres.db.password}" />
+        <property name="initialSize" value="1"/>
+        <property name="maxActive" value="80"/>
+        <property name="minIdle" value="10"/>
+        <property name="maxWait" value="60000"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <property name="minEvictableIdleTimeMillis" value="25200000"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="logAbandoned" value="true"/>
+        <property name="filters" value="mergeStat"/>
+    </bean>
+
+    <bean id="dynamicDataSource" class="io.anyway.galaxy.console.dal.db.DynamicDataSource" destroy-method="close">
+        <property name="defaultDataSource" ref="dataSource"/>
+    </bean>
+
+</beans>
